@@ -1,0 +1,266 @@
+/* Modern Dark Theme Color Palette */
+:root {
+  --primary: #ffffff;
+  --secondary: #666666;
+  --accent: #ea00ff;
+  --danger: #ff4444;
+  --background: #121212;
+  --card-bg: #1e1e1e;
+  --text-primary: #ffffff;
+  --text-secondary: #bbbbbb;
+  --border-color: #333333;
+}
+
+/* General Styles */
+body {
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--background);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+h1 {
+  text-align: center;
+  color: var(--text-primary);
+  margin: 40px 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+a {
+  text-decoration: none;
+  color: var(--accent);
+  transition: all 0.3s ease;
+}
+
+a:hover {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+/* Day Tabs */
+.days-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 30px 0;
+  flex-wrap: wrap;
+  padding: 0 20px;
+}
+
+.tab-button {
+  padding: 12px 24px;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  background-color: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.tab-button:hover {
+  background-color: var(--border-color);
+  border-color: var(--accent);
+}
+
+.tab-button.active {
+  background-color: var(--accent);
+  color: var(--background);
+  border-color: var(--accent);
+}
+
+/* Workout Plan Cards */
+.plans-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  padding: 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.plan-card {
+  background-color: var(--card-bg);
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  padding: 25px;
+  text-align: left;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.plan-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  border-color: var(--accent);
+}
+
+.plan-card img {
+  width: 100%;
+  border-radius: 12px;
+  height: 200px;
+  object-fit: cover;
+  margin-bottom: 20px;
+}
+
+.plan-card h3 {
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  margin: 15px 0;
+  font-weight: 600;
+}
+
+.plan-card p {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 10px 0;
+}
+
+/* Admin Specific Styles */
+.admin-container {
+  max-width: 800px;
+  width: 90%;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: var(--card-bg);
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.admin-container h2 {
+  text-align: center;
+  color: var(--text-primary);
+  font-size: 2rem;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Form Styles */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+form input,
+form textarea,
+form select {
+  padding: 12px 16px;
+  background-color: var(--background);
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1rem;
+  color: var(--text-primary);
+  transition: border-color 0.3s ease;
+}
+
+form input:focus,
+form textarea:focus,
+form select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+form input[type="file"] {
+  padding: 10px;
+  background-color: var(--background);
+  cursor: pointer;
+}
+
+form button {
+  background-color: var(--accent);
+  color: var(--background);
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+form button:hover {
+  background-color: var(--primary);
+}
+
+/* Admin Buttons */
+.admin-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+button.edit,
+button.delete {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.9rem;
+}
+
+button.edit {
+  background-color: var(--accent);
+  color: var(--background);
+}
+
+button.edit:hover {
+  background-color: var(--primary);
+}
+
+button.delete {
+  background-color: transparent;
+  color: var(--danger);
+  border: 2px solid var(--danger);
+}
+
+button.delete:hover {
+  background-color: var(--danger);
+  color: var(--background);
+}
+
+/* Duration Badge */
+.duration-badge {
+  display: inline-block;
+  background-color: var(--accent);
+  color: var(--background);
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .plans-list {
+    grid-template-columns: 1fr;
+    padding: 20px;
+  }
+  
+  .days-tabs {
+    flex-direction: column;
+    padding: 0 40px;
+  }
+  
+  .admin-container {
+    width: 95%;
+    padding: 20px;
+  }
+}
