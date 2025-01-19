@@ -25,8 +25,8 @@ body {
 h1 {
   text-align: center;
   color: var(--text-primary);
-  margin: 40px 0;
-  font-size: 2.5rem;
+  margin: 20px 0;
+  font-size: 2rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 2px;
@@ -54,9 +54,9 @@ a:hover {
 }
 
 .tab-button {
-  padding: 12px 24px;
-  border: 2px solid var(--border-color);
-  border-radius: 8px;
+  padding: 10px 20px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
   background-color: transparent;
   color: var(--text-primary);
   cursor: pointer;
@@ -64,6 +64,7 @@ a:hover {
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 1px;
+  font-size: 0.9rem;
 }
 
 .tab-button:hover {
@@ -80,10 +81,10 @@ a:hover {
 /* Workout Plan Cards */
 .plans-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 30px;
-  padding: 40px;
-  max-width: 1400px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+  padding: 15px;
+  max-width: 1100px;
   margin: 0 auto;
 }
 
@@ -91,7 +92,7 @@ a:hover {
   background-color: var(--card-bg);
   border-radius: 16px;
   border: 1px solid var(--border-color);
-  padding: 25px;
+  padding: 15px;
   text-align: left;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -105,23 +106,23 @@ a:hover {
 .plan-card img {
   width: 100%;
   border-radius: 12px;
-  height: 200px;
+  height: 160px;
   object-fit: cover;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .plan-card h3 {
   color: var(--text-primary);
-  font-size: 1.5rem;
-  margin: 15px 0;
+  font-size: 1.2rem;
+  margin: 8px 0;
   font-weight: 600;
 }
 
 .plan-card p {
   color: var(--text-secondary);
-  font-size: 1rem;
+  font-size: 0.9rem;
   line-height: 1.6;
-  margin: 10px 0;
+  margin: 8px 0;
 }
 
 /* Admin Specific Styles */
@@ -249,18 +250,149 @@ button.delete:hover {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+  h1 {
+    margin: 15px 0;
+    font-size: 1.75rem;
+  }
+
   .plans-list {
-    grid-template-columns: 1fr;
-    padding: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    padding: 12px;
   }
   
+  .plan-card {
+    padding: 12px;
+  }
+
+  .plan-card img {
+    height: 140px;
+  }
+
   .days-tabs {
-    flex-direction: column;
-    padding: 0 40px;
+    gap: 6px;
+    padding: 0 10px;
+    margin: 15px 0;
   }
   
   .admin-container {
     width: 95%;
     padding: 20px;
   }
+  
+  .logo-container {
+    position: relative;
+    top: 5px;
+    left: 10px;
+    margin-bottom: 15px;
+  }
+
+  .logo {
+    max-width: 50px;
+  }
+
+  .tab-button {
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+  }
 }
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.5rem;
+    margin: 10px 0;
+  }
+
+  .plans-list {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    padding: 10px;
+  }
+  
+  .plan-card {
+    padding: 10px;
+    margin: 0 5px;
+  }
+
+  .plan-card img {
+    height: 120px;
+  }
+
+  .days-tabs {
+    gap: 4px;
+    padding: 0 5px;
+  }
+  
+  .tab-button {
+    padding: 4px 8px;
+    font-size: 0.7rem;
+  }
+
+  .plan-card h3 {
+    font-size: 1.1rem;
+  }
+  
+  .plan-card p {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 320px) {
+  .plan-card img {
+    height: 100px;
+  }
+}
+
+.logo-container {
+    position: absolute;
+    top: 10px;
+    left: 15px;
+    padding: 0;
+    z-index: 100;
+}
+
+.logo {
+    max-width: 70px;
+    height: auto;
+}
+
+.admin-login-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.admin-login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form-group input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.admin-login-form button {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.admin-login-form button:hover {
+    background-color: #0056b3;
+}
+

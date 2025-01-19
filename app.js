@@ -2,6 +2,11 @@ const express = require("express");
 const fs = require("fs");
 const path = require("path"); // For resolving file paths
 const multer = require("multer");
+const mongoose = require('mongoose');
+require('dotenv').config();
+const session = require('express-session');
+const { isAuthenticated } = require('./middleware/auth');
+const bcrypt = require('bcrypt');
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
@@ -33,6 +38,19 @@ app.use(express.static(path.join(__dirname, "uploads"))); // For images
 // Middleware for parsing JSON data and form data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Session configuration
+app.use(session({
+    secret: 'your-secret-key',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: process.env.NODE_ENV === 'production' }
+}));
+
+// Connect to MongoDB
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('Could not connect to MongoDB:', err));
 
 // Get the index page
 app.get("/", (req, res) => {
@@ -152,6 +170,35 @@ app.post("/plans/:day/:index/delete", (req, res) => {
 
 // Serve uploaded images
 app.use("/uploads", express.static("uploads"));
+
+// Admin routes
+app.get('/admin/login', (req, res) => {
+    res.render('admin-login');
+});
+
+app.post('/admin/login', (req, res) => {
+    const { username, password } = req.body;
+    
+    console.log('Login attempt:', { username, password }); // For debugging
+    
+    if (username === 'admin' && password === 'alo') {
+        req.session.isAdmin = true;
+        res.redirect('/admin');
+    } else {
+        console.log('Login failed'); // For debugging
+        res.redirect('/admin/login');
+    }
+});
+
+// Protected admin route
+app.get('/admin', isAuthenticated, (req, res) => {
+    res.render('admin'); // Create this view for admin dashboard
+});
+
+app.get('/admin/logout', (req, res) => {
+    req.session.destroy();
+    res.redirect('/admin/login');
+});
 
 app.listen(3000, () => {
   console.log("Server is running on http://localhost:3000");
