@@ -32,6 +32,12 @@
                 <p>Manage workout plans and user data</p>
                 <a href="/admin" class="dashboard-btn admin-btn">Admin Panel</a>
             </div>
+            <% } else { %>
+            <div class="dashboard-card">
+                <h3>Admin Access</h3>
+                <p>Login as administrator</p>
+                <a href="/admin/login" class="dashboard-btn">Admin Login</a>
+            </div>
             <% } %>
         </div>
     </div>

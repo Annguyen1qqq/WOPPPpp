@@ -1,6 +1,48 @@
 const express = require('express');
 const router = express.Router();
+const User = require('../models/User');
+const bcrypt = require('bcryptjs');
 const { isAuthenticated, isAdmin } = require('../middleware/auth');
+
+// Admin login page
+router.get('/admin/login', (req, res) => {
+    res.render('admin/login');
+});
+
+// Admin login handle
+router.post('/admin/login', async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        
+        // Find user
+        const user = await User.findOne({ username });
+        if (!user || !user.isAdmin) {
+            return res.render('admin/login', { 
+                error: 'Invalid admin credentials' 
+            });
+        }
+        
+        // Check password
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.render('admin/login', { 
+                error: 'Invalid admin credentials' 
+            });
+        }
+        
+        // Set admin session
+        req.session.userId = user._id;
+        req.session.username = user.username;
+        req.session.isAdmin = true;
+        
+        res.redirect('/admin');
+    } catch (error) {
+        console.error(error);
+        res.render('admin/login', { 
+            error: 'Server error' 
+        });
+    }
+});
 
 // Admin dashboard
 router.get('/admin', isAuthenticated, isAdmin, (req, res) => {
@@ -30,12 +72,13 @@ router.get('/admin', isAuthenticated, isAdmin, (req, res) => {
 
         const workout = editMode ? workoutPlans[selectedDay].plans[editIndex] : null;
 
-        res.render('admin', {
+        res.render('admin/index', {
             selectedDay,
             editMode,
             editIndex,
             workout,
-            workoutPlans
+            workoutPlans,
+            username: req.session.username
         });
     } catch (error) {
         console.error(error);
