@@ -4,6 +4,11 @@ const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const path = require('path');
 
+// Import routes explicitly
+const authRouter = require('./routes/auth');
+const dashboardRouter = require('./routes/dashboard');
+const workoutPlanRouter = require('./routes/workoutPlan');
+
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -56,11 +61,10 @@ app.get('/', (req, res) => {
     res.redirect('/login');
 });
 
-// Route imports
-app.use('/', require('./routes/auth'));
-app.use('/', require('./routes/dashboard'));
-app.use('/', require('./routes/weight'));
-app.use('/', require('./routes/workoutPlan'));
+// Mount routes
+app.use('/', authRouter);
+app.use('/', dashboardRouter);
+app.use('/', workoutPlanRouter);
 
 // 404 handler
 app.use((req, res) => {
