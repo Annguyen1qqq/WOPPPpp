@@ -124,4 +124,28 @@ router.get('/create-admin', async (req, res) => {
     }
 });
 
+// Temporary route to reset admin password - REMOVE AFTER USE
+router.get('/reset-admin', async (req, res) => {
+    try {
+        const adminUser = await User.findOne({ username: 'admin' });
+        if (!adminUser) {
+            return res.json({ error: 'Admin user not found' });
+        }
+
+        // Update password
+        adminUser.password = 'admin123';  // This will be hashed automatically
+        await adminUser.save();
+
+        res.json({ 
+            message: 'Admin password reset successfully',
+            credentials: {
+                username: 'admin',
+                password: 'admin123'
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 module.exports = router; 
