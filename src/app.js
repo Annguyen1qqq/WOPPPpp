@@ -3,14 +3,14 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const path = require('path');
+
+// Import routes
 const authRoutes = require('./routes/auth');
 const dashboardRoutes = require('./routes/dashboard');
 const weightRoutes = require('./routes/weight');
 const workoutPlanRoutes = require('./routes/workoutPlan');
 
 const app = express();
-
-// Set the port
 const port = process.env.PORT || 3000;
 
 // Create MongoDB session store
@@ -44,14 +44,13 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// MongoDB connection with retry logic
+// MongoDB connection
 const connectDB = async () => {
     try {
         await mongoose.connect(process.env.MONGODB_URI);
         console.log('MongoDB Connected');
     } catch (err) {
         console.error('MongoDB Connection Error:', err);
-        // Retry connection after 5 seconds
         setTimeout(connectDB, 5000);
     }
 };
@@ -64,10 +63,10 @@ app.get('/', (req, res) => {
 });
 
 // Use routes
-app.use('/', authRoutes);
-app.use('/', dashboardRoutes);
-app.use('/', weightRoutes);
-app.use('/', workoutPlanRoutes);
+app.use(authRoutes);
+app.use(dashboardRoutes);
+app.use(weightRoutes);
+app.use(workoutPlanRoutes);
 
 // 404 handler
 app.use((req, res) => {
@@ -83,3 +82,5 @@ app.use((err, req, res, next) => {
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
+
+module.exports = app;
