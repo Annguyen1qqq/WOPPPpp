@@ -6,64 +6,73 @@ const { isAuthenticated, isAdmin } = require('../middleware/auth');
 
 // Admin login page
 router.get('/admin/login', (req, res) => {
-    res.render('admin/login');
+    res.render('admin/login', { error: null });
 });
 
 // Admin login handle
 router.post('/admin/login', async (req, res) => {
     try {
         const { username, password } = req.body;
-        
-        // Debug logs
-        console.log('Login attempt for:', username);
-        
-        // Find user with explicit admin check
-        const user = await User.findOne({ 
-            username: username,
-            isAdmin: true 
-        });
+        console.log('Login attempt:', { username }); // Debug log
+
+        // Basic validation
+        if (!username || !password) {
+            return res.render('admin/login', {
+                error: 'Please enter both username and password',
+                username
+            });
+        }
+
+        // Find user
+        const user = await User.findOne({ username });
+        console.log('User found:', !!user); // Debug log
 
         if (!user) {
-            console.log('Admin user not found');
-            return res.render('admin/login', { 
-                error: 'Invalid admin credentials',
-                username: username // Preserve the username in the form
+            return res.render('admin/login', {
+                error: 'Invalid credentials',
+                username
             });
         }
 
-        // Verify password
+        // Check if user is admin
+        if (!user.isAdmin) {
+            console.log('User is not admin'); // Debug log
+            return res.render('admin/login', {
+                error: 'Access denied: Not an admin user',
+                username
+            });
+        }
+
+        // Check password
         const isMatch = await bcrypt.compare(password, user.password);
-        console.log('Password match:', isMatch);
+        console.log('Password match:', isMatch); // Debug log
 
         if (!isMatch) {
-            console.log('Password incorrect');
-            return res.render('admin/login', { 
-                error: 'Invalid admin credentials',
-                username: username // Preserve the username in the form
+            return res.render('admin/login', {
+                error: 'Invalid credentials',
+                username
             });
         }
 
-        // Set session with explicit admin flag
+        // Set session
         req.session.userId = user._id;
         req.session.username = user.username;
         req.session.isAdmin = true;
-        
-        // Save session before redirect
-        req.session.save((err) => {
-            if (err) {
-                console.error('Session save error:', err);
-                return res.render('admin/login', { 
-                    error: 'Session error',
-                    username: username
-                });
-            }
-            res.redirect('/admin');
+
+        // Save session explicitly
+        await new Promise((resolve, reject) => {
+            req.session.save(err => {
+                if (err) reject(err);
+                else resolve();
+            });
         });
 
+        res.redirect('/admin');
+
     } catch (error) {
-        console.error('Admin login error:', error);
-        res.render('admin/login', { 
-            error: 'Server error, please try again',
+        console.error('Login error:', error);
+        res.render('admin/login', {
+            error: 'Server error occurred',
             username: req.body.username
         });
     }
@@ -81,7 +90,7 @@ router.get('/admin/test-session', (req, res) => {
 });
 
 // Admin dashboard
-router.get('/admin', isAuthenticated, isAdmin, (req, res) => {
+router.get('/admin', isAuthenticated, isAdmin, async (req, res) => {
     try {
         const selectedDay = req.query.day || 'monday';
         const editIndex = req.query.edit;
@@ -108,7 +117,7 @@ router.get('/admin', isAuthenticated, isAdmin, (req, res) => {
 
         const workout = editMode ? workoutPlans[selectedDay].plans[editIndex] : null;
 
-        res.render('admin/index', {
+        res.render('admin', {
             selectedDay,
             editMode,
             editIndex,
@@ -117,7 +126,7 @@ router.get('/admin', isAuthenticated, isAdmin, (req, res) => {
             username: req.session.username
         });
     } catch (error) {
-        console.error(error);
+        console.error('Admin dashboard error:', error);
         res.status(500).send('Server Error');
     }
 });
@@ -159,5 +168,34 @@ router.post('/plans/:day/:index/delete', isAuthenticated, isAdmin, async (req, r
     }
 });
 
-module.exports = router; 
+// Create test admin account
+router.get('/admin/setup', async (req, res) => {
+    try {
+        // Delete existing admin
+        await User.deleteOne({ username: 'admin' });
+
+        // Create new admin
+        const hashedPassword = await bcrypt.hash('admin', 10);
+        const admin = new User({
+            username: 'admin',
+            email: 'admin@example.com',
+            password: hashedPassword,
+            isAdmin: true
+        });
+
+        await admin.save();
+
+        res.json({
+            message: 'Admin account created',
+            credentials: {
+                username: 'admin',
+                password: 'admin'
+            }
+        });
+    } catch (error) {
+        console.error('Setup error:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
 module.exports = router; 
