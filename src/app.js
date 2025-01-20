@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const path = require('path');
+const authRoutes = require('./routes/auth');
 
 const app = express();
 
@@ -39,8 +40,7 @@ app.get('/', (req, res) => {
 });
 
 // Auth routes
-const authRoutes = require('./routes/auth');
-app.use('/', authRoutes);
+app.use(authRoutes);
 
 // 404 handler
 app.use((req, res) => {
