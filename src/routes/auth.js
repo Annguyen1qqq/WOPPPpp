@@ -101,4 +101,27 @@ router.get('/logout', (req, res) => {
     res.redirect('/login');
 });
 
+// Temporary route to create admin - REMOVE AFTER USE
+router.get('/create-admin', async (req, res) => {
+    try {
+        const adminUser = new User({
+            username: 'admin',
+            email: 'admin@example.com',
+            password: 'admin123',  // This will be hashed automatically
+            isAdmin: true
+        });
+        
+        await adminUser.save();
+        res.json({ 
+            message: 'Admin created successfully',
+            credentials: {
+                username: 'admin',
+                password: 'admin123'
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 module.exports = router; 
