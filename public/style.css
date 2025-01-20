@@ -423,3 +423,76 @@ button.delete:hover {
     opacity: 0.9;
 }
 
+.weight-tracker {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.weight-form {
+    background: var(--bg-secondary);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--text-primary);
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.weight-history table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.weight-history th,
+.weight-history td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.delete-btn {
+    background: #ff4444;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.delete-btn:hover {
+    background: #cc0000;
+}
+
+@media (max-width: 768px) {
+    .weight-tracker {
+        padding: 10px;
+    }
+    
+    .weight-history {
+        overflow-x: auto;
+    }
+    
+    .weight-form {
+        padding: 15px;
+    }
+}
+
