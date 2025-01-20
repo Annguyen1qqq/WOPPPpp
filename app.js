@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 const session = require('express-session');
 const { isAuthenticated } = require('./middleware/auth');
-const bcrypt = require('bcrypt');
+const bcryptjs = require('bcryptjs');
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
