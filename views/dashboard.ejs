@@ -5,25 +5,37 @@
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <div class="dashboard-container">
-        <header class="dashboard-header">
-            <h1>Welcome, <%= username %>!</h1>
-            <nav>
-                <a href="/weight" class="nav-link">Weight Tracker</a>
-                <a href="/logout" class="nav-link logout">Logout</a>
-            </nav>
-        </header>
+    <%- include('partials/header') %>
 
-        <main class="dashboard-content">
-            <div class="dashboard-cards">
-                <div class="card">
-                    <h2>Weight Tracking</h2>
-                    <p>Track your weight progress</p>
-                    <a href="/weight" class="card-link">View Weight Log</a>
-                </div>
-                <!-- Add more cards for other features -->
+    <div class="dashboard-container">
+        <div class="welcome-section">
+            <h1>Welcome, <%= username %>!</h1>
+            <p>Track your fitness journey and manage your workouts</p>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="dashboard-card">
+                <h3>Workout Plans</h3>
+                <p>View and follow your weekly workout schedule</p>
+                <a href="/workout-plans" class="dashboard-btn">View Plans</a>
             </div>
-        </main>
+
+            <div class="dashboard-card">
+                <h3>Weight Tracking</h3>
+                <p>Monitor your weight progress over time</p>
+                <a href="/weight" class="dashboard-btn">Track Weight</a>
+            </div>
+
+            <% if (isAdmin) { %>
+            <div class="dashboard-card admin-card">
+                <h3>Admin Panel</h3>
+                <p>Manage workout plans and user data</p>
+                <a href="/admin" class="dashboard-btn admin-btn">Admin Panel</a>
+            </div>
+            <% } %>
+        </div>
     </div>
+
+    <%- include('partials/footer') %>
 </body>
 </html> 

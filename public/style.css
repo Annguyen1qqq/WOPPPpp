@@ -641,3 +641,170 @@ button.delete:hover {
   padding: 0 20px;
 }
 
+/* Dashboard Styles */
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.welcome-section {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.welcome-section h1 {
+    color: var(--text-primary);
+    margin-bottom: 10px;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.dashboard-card {
+    background: var(--bg-secondary);
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.dashboard-card h3 {
+    color: var(--text-primary);
+    margin-bottom: 10px;
+}
+
+.dashboard-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-top: 15px;
+    background: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: opacity 0.3s;
+}
+
+.dashboard-btn:hover {
+    opacity: 0.9;
+}
+
+.admin-card {
+    background: #2c3e50;
+}
+
+.admin-btn {
+    background: #e74c3c;
+}
+
+/* Admin Styles */
+.admin-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.admin-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.admin-nav {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.admin-nav-link {
+    padding: 10px 20px;
+    text-decoration: none;
+    color: var(--text-primary);
+    background: var(--bg-secondary);
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.admin-nav-link.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+.admin-form-container {
+    background: var(--bg-secondary);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.admin-form {
+    display: grid;
+    gap: 20px;
+}
+
+.form-group {
+    display: grid;
+    gap: 8px;
+}
+
+.admin-input,
+.admin-select,
+.admin-textarea {
+    padding: 10px;
+    border: 1px solid var(--bg-primary);
+    border-radius: 4px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.admin-textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.file-upload-container {
+    border: 2px dashed var(--bg-primary);
+    padding: 20px;
+    text-align: center;
+    border-radius: 4px;
+}
+
+.admin-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: opacity 0.3s;
+}
+
+.admin-button-primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+.admin-button-danger {
+    background: #e74c3c;
+    color: white;
+}
+
+.admin-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+@media (max-width: 768px) {
+    .admin-nav {
+        flex-direction: column;
+    }
+    
+    .admin-form {
+        gap: 15px;
+    }
+}
+

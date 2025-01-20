@@ -5,4 +5,11 @@ const isAuthenticated = (req, res, next) => {
     res.redirect('/login');
 };
 
-module.exports = { isAuthenticated }; 
+const isAdmin = (req, res, next) => {
+    if (req.session.isAdmin) {
+        return next();
+    }
+    res.status(403).render('error', { error: 'Access denied' });
+};
+
+module.exports = { isAuthenticated, isAdmin }; 
