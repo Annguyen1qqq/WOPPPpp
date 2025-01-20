@@ -13,10 +13,14 @@ router.get('/admin/login', (req, res) => {
 router.post('/admin/login', async (req, res) => {
     try {
         const { username, password } = req.body;
+        console.log('Login attempt:', { username }); // Debug log
         
         // Find user
         const user = await User.findOne({ username });
+        console.log('User found:', user ? 'yes' : 'no'); // Debug log
+        
         if (!user || !user.isAdmin) {
+            console.log('User not found or not admin'); // Debug log
             return res.render('admin/login', { 
                 error: 'Invalid admin credentials' 
             });
@@ -24,6 +28,8 @@ router.post('/admin/login', async (req, res) => {
         
         // Check password
         const isMatch = await bcrypt.compare(password, user.password);
+        console.log('Password match:', isMatch); // Debug log
+        
         if (!isMatch) {
             return res.render('admin/login', { 
                 error: 'Invalid admin credentials' 
@@ -37,7 +43,7 @@ router.post('/admin/login', async (req, res) => {
         
         res.redirect('/admin');
     } catch (error) {
-        console.error(error);
+        console.error('Login error:', error); // Debug log
         res.render('admin/login', { 
             error: 'Server error' 
         });

@@ -158,4 +158,54 @@ router.get('/reset-admin', async (req, res) => {
     }
 });
 
+// Temporary route to check admin - REMOVE AFTER USE
+router.get('/check-admin', async (req, res) => {
+    try {
+        const adminUser = await User.findOne({ username: 'admin' });
+        if (!adminUser) {
+            return res.json({ error: 'Admin user not found' });
+        }
+
+        // Don't send password in response
+        res.json({ 
+            username: adminUser.username,
+            email: adminUser.email,
+            isAdmin: adminUser.isAdmin,
+            id: adminUser._id
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Create new admin with explicit password hash
+router.get('/create-new-admin', async (req, res) => {
+    try {
+        // First delete existing admin if any
+        await User.deleteOne({ username: 'admin' });
+
+        // Create new password hash explicitly
+        const salt = await bcryptjs.genSalt(10);
+        const hashedPassword = await bcryptjs.hash('admin123', salt);
+
+        const adminUser = new User({
+            username: 'admin',
+            email: 'admin@example.com',
+            password: hashedPassword,
+            isAdmin: true
+        });
+        
+        await adminUser.save();
+        res.json({ 
+            message: 'New admin created successfully',
+            credentials: {
+                username: 'admin',
+                password: 'admin123'
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 module.exports = router; 
