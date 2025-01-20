@@ -11,13 +11,13 @@
         <div class="admin-login-box">
             <h1>Admin Login</h1>
             
-            <% if (typeof error !== 'undefined') { %>
+            <% if (typeof error !== 'undefined' && error) { %>
                 <div class="error-message">
                     <%= error %>
                 </div>
             <% } %>
 
-            <form method="POST" class="admin-login-form">
+            <form action="/admin/login" method="POST" class="admin-login-form">
                 <div class="form-group">
                     <label for="username">Username</label>
                     <input 

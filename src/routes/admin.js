@@ -11,45 +11,40 @@ router.get('/admin/login', (req, res) => {
 
 // Admin login handle
 router.post('/admin/login', async (req, res) => {
+    console.log('Form submitted:', req.body); // Log form data
+    
     try {
         const { username, password } = req.body;
-        console.log('Login attempt:', { username }); // Debug log
 
-        // Basic validation
-        if (!username || !password) {
-            return res.render('admin/login', {
-                error: 'Please enter both username and password',
-                username
-            });
-        }
-
-        // Find user
+        // Find user without admin check first
         const user = await User.findOne({ username });
-        console.log('User found:', !!user); // Debug log
+        console.log('Found user:', {
+            exists: !!user,
+            username: user?.username,
+            isAdmin: user?.isAdmin
+        });
 
         if (!user) {
             return res.render('admin/login', {
-                error: 'Invalid credentials',
-                username
-            });
-        }
-
-        // Check if user is admin
-        if (!user.isAdmin) {
-            console.log('User is not admin'); // Debug log
-            return res.render('admin/login', {
-                error: 'Access denied: Not an admin user',
+                error: 'User not found',
                 username
             });
         }
 
         // Check password
         const isMatch = await bcrypt.compare(password, user.password);
-        console.log('Password match:', isMatch); // Debug log
+        console.log('Password match:', isMatch);
 
         if (!isMatch) {
             return res.render('admin/login', {
-                error: 'Invalid credentials',
+                error: 'Invalid password',
+                username
+            });
+        }
+
+        if (!user.isAdmin) {
+            return res.render('admin/login', {
+                error: 'Not an admin user',
                 username
             });
         }
@@ -59,20 +54,14 @@ router.post('/admin/login', async (req, res) => {
         req.session.username = user.username;
         req.session.isAdmin = true;
 
-        // Save session explicitly
-        await new Promise((resolve, reject) => {
-            req.session.save(err => {
-                if (err) reject(err);
-                else resolve();
-            });
-        });
+        console.log('Session set:', req.session);
 
         res.redirect('/admin');
 
     } catch (error) {
         console.error('Login error:', error);
         res.render('admin/login', {
-            error: 'Server error occurred',
+            error: 'Server error: ' + error.message,
             username: req.body.username
         });
     }
@@ -169,31 +158,55 @@ router.post('/plans/:day/:index/delete', isAuthenticated, isAdmin, async (req, r
 });
 
 // Create test admin account
-router.get('/admin/setup', async (req, res) => {
+router.get('/create-test-admin', async (req, res) => {
     try {
-        // Delete existing admin
+        // Delete any existing admin
         await User.deleteOne({ username: 'admin' });
 
-        // Create new admin
-        const hashedPassword = await bcrypt.hash('admin', 10);
+        // Create new admin with simple password
         const admin = new User({
             username: 'admin',
             email: 'admin@example.com',
-            password: hashedPassword,
+            password: 'admin123',
             isAdmin: true
         });
 
         await admin.save();
-
+        
+        // Verify the user was created
+        const verifyUser = await User.findOne({ username: 'admin' });
+        
         res.json({
             message: 'Admin account created',
+            userCreated: !!verifyUser,
             credentials: {
                 username: 'admin',
-                password: 'admin'
+                password: 'admin123'
+            },
+            verification: {
+                exists: !!verifyUser,
+                isAdmin: verifyUser?.isAdmin
             }
         });
     } catch (error) {
-        console.error('Setup error:', error);
+        console.error('Admin creation error:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Check existing admin
+router.get('/check-admin', async (req, res) => {
+    try {
+        const admin = await User.findOne({ username: 'admin' });
+        res.json({
+            exists: !!admin,
+            user: admin ? {
+                username: admin.username,
+                isAdmin: admin.isAdmin,
+                id: admin._id
+            } : null
+        });
+    } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
