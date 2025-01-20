@@ -13,41 +13,71 @@ router.get('/admin/login', (req, res) => {
 router.post('/admin/login', async (req, res) => {
     try {
         const { username, password } = req.body;
-        console.log('Login attempt:', { username }); // Debug log
         
-        // Find user
-        const user = await User.findOne({ username });
-        console.log('User found:', user ? 'yes' : 'no'); // Debug log
+        // Debug logs
+        console.log('Login attempt for:', username);
         
-        if (!user || !user.isAdmin) {
-            console.log('User not found or not admin'); // Debug log
+        // Find user with explicit admin check
+        const user = await User.findOne({ 
+            username: username,
+            isAdmin: true 
+        });
+
+        if (!user) {
+            console.log('Admin user not found');
             return res.render('admin/login', { 
-                error: 'Invalid admin credentials' 
+                error: 'Invalid admin credentials',
+                username: username // Preserve the username in the form
             });
         }
-        
-        // Check password
+
+        // Verify password
         const isMatch = await bcrypt.compare(password, user.password);
-        console.log('Password match:', isMatch); // Debug log
-        
+        console.log('Password match:', isMatch);
+
         if (!isMatch) {
+            console.log('Password incorrect');
             return res.render('admin/login', { 
-                error: 'Invalid admin credentials' 
+                error: 'Invalid admin credentials',
+                username: username // Preserve the username in the form
             });
         }
-        
-        // Set admin session
+
+        // Set session with explicit admin flag
         req.session.userId = user._id;
         req.session.username = user.username;
         req.session.isAdmin = true;
         
-        res.redirect('/admin');
+        // Save session before redirect
+        req.session.save((err) => {
+            if (err) {
+                console.error('Session save error:', err);
+                return res.render('admin/login', { 
+                    error: 'Session error',
+                    username: username
+                });
+            }
+            res.redirect('/admin');
+        });
+
     } catch (error) {
-        console.error('Login error:', error); // Debug log
+        console.error('Admin login error:', error);
         res.render('admin/login', { 
-            error: 'Server error' 
+            error: 'Server error, please try again',
+            username: req.body.username
         });
     }
+});
+
+// Test route to verify admin session
+router.get('/admin/test-session', (req, res) => {
+    res.json({
+        session: {
+            userId: req.session.userId,
+            username: req.session.username,
+            isAdmin: req.session.isAdmin
+        }
+    });
 });
 
 // Admin dashboard
@@ -129,4 +159,5 @@ router.post('/plans/:day/:index/delete', isAuthenticated, isAdmin, async (req, r
     }
 });
 
+module.exports = router; 
 module.exports = router; 

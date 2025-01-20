@@ -178,16 +178,18 @@ router.get('/check-admin', async (req, res) => {
     }
 });
 
-// Create new admin with explicit password hash
-router.get('/create-new-admin', async (req, res) => {
+// Create new admin with simple credentials
+router.get('/setup-admin', async (req, res) => {
     try {
-        // First delete existing admin if any
+        // Remove existing admin
         await User.deleteOne({ username: 'admin' });
 
-        // Create new password hash explicitly
+        // Create simple password hash
+        const password = 'admin';
         const salt = await bcryptjs.genSalt(10);
-        const hashedPassword = await bcryptjs.hash('admin123', salt);
+        const hashedPassword = await bcryptjs.hash(password, salt);
 
+        // Create new admin user
         const adminUser = new User({
             username: 'admin',
             email: 'admin@example.com',
@@ -196,14 +198,16 @@ router.get('/create-new-admin', async (req, res) => {
         });
         
         await adminUser.save();
+
         res.json({ 
-            message: 'New admin created successfully',
+            message: 'Admin created successfully',
             credentials: {
                 username: 'admin',
-                password: 'admin123'
+                password: 'admin'  // Simple password for testing
             }
         });
     } catch (error) {
+        console.error('Setup admin error:', error);
         res.status(500).json({ error: error.message });
     }
 });
