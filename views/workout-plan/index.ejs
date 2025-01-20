@@ -1,94 +1,62 @@
 <%- include('../partials/header') %>
 
-<div class="workout-plan-container">
-    <h2>Weekly Workout Plan</h2>
-    
-    <div class="days-grid">
-        <% const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] %>
-        
-        <% days.forEach(day => { %>
-            <div class="day-card">
-                <h3><%= day.charAt(0).toUpperCase() + day.slice(1) %></h3>
-                
-                <div class="plans-list">
-                    <% if (workoutPlan[day].plans.length > 0) { %>
-                        <% workoutPlan[day].plans.forEach(plan => { %>
-                            <div class="plan-card">
-                                <h4><%= plan.name %></h4>
-                                <p><%= plan.description %></p>
-                                <p><strong>Duration:</strong> <%= plan.duration %> minutes</p>
-                                <button onclick="deletePlan('<%= day %>', '<%= plan._id %>')" class="delete-btn">Delete</button>
-                            </div>
-                        <% }) %>
-                    <% } else { %>
-                        <p class="no-plans">No workouts planned</p>
-                    <% } %>
-                </div>
-                
-                <button onclick="showAddPlanForm('<%= day %>')" class="add-btn">Add Workout</button>
-            </div>
-        <% }) %>
-    </div>
+<div class="logo-container">
+    <img src="/images/amimo.png" alt="Plan Tap Den Chet Logo" class="logo">
+</div>
+<h1>Plan Tap Den Chet</h1>
+
+<div class="days-tabs">
+    <button class="tab-button active" data-day="monday">Monday</button>
+    <button class="tab-button" data-day="tuesday">Tuesday</button>
+    <button class="tab-button" data-day="wednesday">Wednesday</button>
+    <button class="tab-button" data-day="thursday">Thursday</button>
+    <button class="tab-button" data-day="friday">Friday</button>
+    <button class="tab-button" data-day="saturday">Saturday</button>
+    <button class="tab-button" data-day="sunday">Sunday</button>
 </div>
 
-<!-- Add Plan Modal -->
-<div id="addPlanModal" class="modal">
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <h3>Add New Workout</h3>
-        <form id="addPlanForm" action="" method="POST">
-            <div class="form-group">
-                <label>Name:</label>
-                <input type="text" name="name" required>
-            </div>
-            <div class="form-group">
-                <label>Description:</label>
-                <textarea name="description"></textarea>
-            </div>
-            <div class="form-group">
-                <label>Duration (minutes):</label>
-                <input type="number" name="duration" required min="1">
-            </div>
-            <button type="submit" class="btn-primary">Add Workout</button>
-        </form>
+<% const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']; %>
+
+<% days.forEach(day => { %>
+    <div class="day-content" id="<%= day %>" style="display: <%= day === 'monday' ? 'block' : 'none' %>">
+        <h2><%= day.charAt(0).toUpperCase() + day.slice(1) %> Bai</h2>
+        <div class="plans-list">
+            <% if (workoutPlans[day].plans.length > 0) { %>
+                <% workoutPlans[day].plans.forEach(plan => { %>
+                    <div class="plan-card">
+                        <img src="<%= plan.image %>" alt="<%= plan.name %>">
+                        <h3><%= plan.name %></h3>
+                        <p><%= plan.description %></p>
+                        <p>Thời gian nghỉ: <%= plan.duration %> giây</p>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <p class="no-plans">Không có bài tập cho ngày này</p>
+            <% } %>
+        </div>
     </div>
-</div>
+<% }) %>
 
 <script>
-const modal = document.getElementById('addPlanModal');
-const form = document.getElementById('addPlanForm');
-const closeBtn = document.getElementsByClassName('close')[0];
+document.addEventListener('DOMContentLoaded', function() {
+    const tabs = document.querySelectorAll('.tab-button');
+    const contents = document.querySelectorAll('.day-content');
 
-function showAddPlanForm(day) {
-    modal.style.display = 'block';
-    form.action = `/workout-plans/${day}`;
-}
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            // Remove active class from all tabs
+            tabs.forEach(t => t.classList.remove('active'));
+            // Add active class to clicked tab
+            tab.classList.add('active');
 
-closeBtn.onclick = function() {
-    modal.style.display = 'none';
-}
-
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = 'none';
-    }
-}
-
-async function deletePlan(day, planId) {
-    if (confirm('Are you sure you want to delete this workout?')) {
-        try {
-            const response = await fetch(`/workout-plans/${day}/${planId}`, {
-                method: 'DELETE'
-            });
-            const data = await response.json();
-            if (data.success) {
-                location.reload();
-            }
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    }
-}
+            // Hide all content
+            contents.forEach(content => content.style.display = 'none');
+            // Show selected content
+            const day = tab.dataset.day;
+            document.getElementById(day).style.display = 'block';
+        });
+    });
+});
 </script>
 
 <%- include('../partials/footer') %> 
