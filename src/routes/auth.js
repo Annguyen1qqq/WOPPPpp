@@ -124,6 +124,16 @@ router.get('/create-admin', async (req, res) => {
     }
 });
 
+// Temporary route to check users - REMOVE AFTER USE
+router.get('/check-users', async (req, res) => {
+    try {
+        const users = await User.find({}, 'username email isAdmin');
+        res.json(users);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // Temporary route to reset admin password - REMOVE AFTER USE
 router.get('/reset-admin', async (req, res) => {
     try {
