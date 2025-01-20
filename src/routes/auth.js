@@ -41,7 +41,9 @@ router.post('/register', async (req, res) => {
         const newUser = new User({
             username,
             email,
-            password
+            password,
+            // Make the first user an admin
+            isAdmin: await User.countDocuments() === 0
         });
         
         await newUser.save();
