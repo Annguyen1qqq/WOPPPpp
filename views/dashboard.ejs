@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard - Workout Tracker</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <h1>Welcome, <%= username %>!</h1>
+            <nav>
+                <a href="/weight" class="nav-link">Weight Tracker</a>
+                <a href="/logout" class="nav-link logout">Logout</a>
+            </nav>
+        </header>
+
+        <main class="dashboard-content">
+            <div class="dashboard-cards">
+                <div class="card">
+                    <h2>Weight Tracking</h2>
+                    <p>Track your weight progress</p>
+                    <a href="/weight" class="card-link">View Weight Log</a>
+                </div>
+                <!-- Add more cards for other features -->
+            </div>
+        </main>
+    </div>
+</body>
+</html> 
