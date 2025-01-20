@@ -3,15 +3,11 @@ const router = express.Router();
 const Weight = require('../models/Weight');
 const { isAuthenticated } = require('../middleware/auth');
 
-// Get all weight entries
-router.get('/weight', isAuthenticated, async (req, res) => {
-    try {
-        const weights = await Weight.find({ userId: req.session.userId })
-            .sort({ date: -1 });
-        res.render('weight/index', { weights });
-    } catch (error) {
-        res.status(500).send('Server Error');
-    }
+// Get weight tracking page
+router.get('/weight', isAuthenticated, (req, res) => {
+    res.render('weight/index', {
+        weights: []  // We'll add database integration later
+    });
 });
 
 // Add new weight entry

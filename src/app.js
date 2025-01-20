@@ -8,6 +8,7 @@ const path = require('path');
 const authRouter = require('./routes/auth');
 const dashboardRouter = require('./routes/dashboard');
 const workoutPlanRouter = require('./routes/workoutPlan');
+const weightRouter = require('./routes/weight');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -65,6 +66,7 @@ app.get('/', (req, res) => {
 app.use('/', authRouter);
 app.use('/', dashboardRouter);
 app.use('/', workoutPlanRouter);
+app.use('/', weightRouter);
 
 // 404 handler
 app.use((req, res) => {
