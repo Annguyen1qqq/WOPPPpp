@@ -83,6 +83,7 @@ router.post('/login', async (req, res) => {
         // Set session
         req.session.userId = user._id;
         req.session.username = user.username;
+        req.session.isAdmin = user.isAdmin;
         res.redirect('/dashboard');
     } catch (error) {
         console.error(error);
